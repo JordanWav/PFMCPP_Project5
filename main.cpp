@@ -100,11 +100,13 @@ namespace Example
         bool madeSalad(std::string lettuceBrand, bool includeTomatoes = true, std::string dressing = "Italian");
         float preheatOven(float ovenTemperature);
         bool tableSet(int numPlacesToSet, int placesSet);
+        void printNumKnives();
     };
     bool furnishHouse(House myHouse);
     void openFrontDoor(std::string door = "front door");
     bool closeWindow(House::Kitchen myKitchen);
     void openWindows(int openedWindows);
+    void printNumBeds();
 };
 
 House::House() : numRooms(4), numWindows(10), ownerName("Viktor"), numDoors(5), numBeds(2)
@@ -186,6 +188,11 @@ bool House::Kitchen::tableSet(int numPlacesToSet, int placesSet)
     return false; 
 }
 
+void House::Kitchen::printNumKnives()
+{
+    std::cout << "THIS Number of knives: " << this->numKnives << std::endl;
+}
+
 bool House::furnishHouse(House myHouse)
 {   
     if( myHouse.numBeds == 0 )
@@ -234,6 +241,11 @@ bool House::closeWindow(House::Kitchen myKitchen)
     return myKitchen.numShelves > 1;
 }
 
+void House::printNumBeds()
+{
+    std::cout << "THIS Number of beds: " << this->numBeds << std::endl;
+}
+
 
 /*
  copied UDT 2:
@@ -265,11 +277,13 @@ bool House::closeWindow(House::Kitchen myKitchen)
         bool completeAchievement(std::string achievementName, int numPoints = 5);
         void changeMenu(char buttonPressed = 'b', std::string currentMenu = "Main menu");
         int totalAchievementPoints(int achievementsGained, int achievementPoints);
+        void printSizeOfGame();
     };
     bool openGame(Xbox::Game skyrim);
     bool downloadGame(Xbox::Game haloInfinite);
     void turnOnXbox(Xbox myXbox);
     int deleteAllGames(int gamesDeleted);
+    void printAmountOfSpace();
 };
 
 Xbox::Xbox() : amountOfSpace(500.f), numGamesDownloaded(10), numControllers(2), profileName("Profile2"), numFriendsOnline(10)
@@ -344,6 +358,11 @@ int Xbox::Game::totalAchievementPoints(int achievementsGained, int achievementPo
     return currentTotal;
 }
 
+void Xbox::Game::printSizeOfGame()
+{
+    std::cout << "THIS Size of game: " << this->sizeOfGame << std::endl;
+}
+
 bool Xbox::openGame(Xbox::Game skyrim)
 {
     if( skyrim.gameCategory == "RPG" )
@@ -383,6 +402,11 @@ int Xbox::deleteAllGames(int gamesDeleted)
     return numGamesDownloaded;
 }
 
+void Xbox::printAmountOfSpace()
+{
+    std::cout << "THIS Amount of space: " << this->amountOfSpace << std::endl;
+}
+
 /*
  copied UDT 3:
  */
@@ -401,6 +425,7 @@ struct LogicPro
     std::string insertPlugin(LogicPro trackA);
     int recordPerformance(LogicPro trackB);
     int addTracks(int numTracksNeeded);
+    void printSampleRate();
 };
 
 LogicPro::LogicPro() : sampleRate(44100.f), nameOfInputDevice("Scarlett 2i4"), nameOfProject("My Song"), numTracks(25), tempo(135)
@@ -475,6 +500,11 @@ int LogicPro::addTracks(int numTracksNeeded)
     return numTracks;
 }
 
+void LogicPro::printSampleRate()
+{
+    std::cout << "THIS Sample rate: " << this->sampleRate << std::endl;
+}
+
 /*
  new UDT 4:
  with 2 member functions
@@ -489,6 +519,7 @@ struct HouseBuilder
 
     void createAnotherFloor(House houseA);
     int addShelvesToKitchen(House::Kitchen kitchenA, int numShelvesToAdd);
+    void printHouseNumRooms();
 };
 
 HouseBuilder::HouseBuilder()
@@ -514,6 +545,11 @@ int HouseBuilder::addShelvesToKitchen(House::Kitchen kitchenA, int numShelvesToA
     return kitchenA.numShelves + numShelvesToAdd;
 }
 
+void HouseBuilder::printHouseNumRooms()
+{
+    std::cout << "THIS Number of rooms in 'house': " << this->house.numRooms << std::endl; 
+}
+
 /*
  new UDT 5:
  with 2 member functions
@@ -528,6 +564,7 @@ struct GameStore
 
     void sellControllersWithXbox(Xbox, int numControllersToSell);
     void displayGame(Xbox::Game gameA);
+    void printGameRating();
 };
 
 GameStore::GameStore()
@@ -551,6 +588,11 @@ void GameStore::displayGame(Xbox::Game gameA)
 {
     std::cout << "Displaying game" << std::endl;
     std:: cout << "Game info: " << "Genre: " << gameA.gameCategory << ", Rating: " << gameA.gameRating << std::endl; 
+}
+
+void GameStore::printGameRating()
+{
+    std::cout << "THIS Game rating is: " << this->game.gameRating << std::endl;
 }
 
 /*
@@ -579,6 +621,8 @@ int main()
     home.openFrontDoor("front door");
     home.closeWindow(homeKitchen);
     home.openWindows(0);
+    std::cout << "Number of beds: " << home.numBeds << std::endl;
+    home.printNumBeds();
 
     std::cout << "----------------------------------" << std::endl;
     
@@ -590,8 +634,9 @@ int main()
     kitchenA.microwaveChicken(300.f);
     kitchenA.madeSalad("Great Lettuce", false, "French");
     kitchenA.preheatOven(450.f);
-
     kitchenA.tableSet(7, 0);
+    std::cout << "Number of knives: " << kitchenA.numKnives << std::endl;
+    kitchenA.printNumKnives();
 
     std::cout << std::endl;
 
@@ -619,6 +664,8 @@ int main()
     myXbox.downloadGame(oblivion);
     myXbox.turnOnXbox(myXbox);
     myXbox.deleteAllGames(0);
+    std::cout << "Amount of space: " << myXbox.amountOfSpace << std::endl;
+    myXbox.printAmountOfSpace();
 
     std::cout << "----------------------------------" << std::endl;
 
@@ -630,6 +677,8 @@ int main()
     Xbox::Game skyrim;
     skyrim.numCompletedAchievements = 10;
     skyrim.totalAchievementPoints(5, 10);
+    std::cout << "Size of game: " << skyrim.sizeOfGame << std::endl;
+    morrowind.printSizeOfGame();
 
     std::cout << "----------------------------------" << std::endl;
 
@@ -641,18 +690,24 @@ int main()
     sessionA.insertPlugin(sessionA);
     sessionA.recordPerformance(sessionA);
     sessionA.addTracks(15);
+    std::cout << "Sample rate: " << sessionA.sampleRate << std::endl;
+    sessionA.printSampleRate();
 
     std::cout << "----------------------------------" << std::endl;
 
     HouseBuilder builder;
     builder.createAnotherFloor(builder.house);
     builder.addShelvesToKitchen(builder.kitchen, 2);
+    std::cout << "Number of rooms in 'house': " << builder.house.numRooms << std::endl;
+    builder.printHouseNumRooms();
 
     std::cout << "----------------------------------" << std::endl;
     
     GameStore gameStore;
     sellControllersWithXbox(gameStore.xbox, 3);
     gameStore.displayGame(gameStore.game);
+    std::cout << "Game rating is: " << gameStore.game.gameRating << std::endl;
+    gameStore.printGameRating();
 
     std::cout << "----------------------------------" << std::endl;
 
