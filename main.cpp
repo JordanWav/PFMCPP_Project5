@@ -190,7 +190,7 @@ bool House::Kitchen::tableSet(int numPlacesToSet, int placesSet)
 
 void House::Kitchen::printNumKnives()
 {
-    std::cout << "THIS Number of knives: " << this-> numKnives << std::endl;
+    std::cout << "THIS Number of knives: " << this->numKnives << std::endl;
 }
 
 bool House::furnishHouse(House myHouse)
@@ -243,7 +243,7 @@ bool House::closeWindow(House::Kitchen myKitchen)
 
 void House::printNumBeds()
 {
-    std::cout << "THIS Number of beds: " << this-> numBeds << std::endl;
+    std::cout << "THIS Number of beds: " << this->numBeds << std::endl;
 }
 
 
@@ -360,7 +360,7 @@ int Xbox::Game::totalAchievementPoints(int achievementsGained, int achievementPo
 
 void Xbox::Game::printSizeOfGame()
 {
-    std::cout << "THIS Size of game: " << this-> sizeOfGame << std::endl;
+    std::cout << "THIS Size of game: " << this->sizeOfGame << std::endl;
 }
 
 bool Xbox::openGame(Xbox::Game skyrim)
@@ -404,7 +404,7 @@ int Xbox::deleteAllGames(int gamesDeleted)
 
 void Xbox::printAmountOfSpace()
 {
-    std::cout << "THIS Amount of space: " << this-> amountOfSpace << std::endl;
+    std::cout << "THIS Amount of space: " << this->amountOfSpace << std::endl;
 }
 
 /*
@@ -502,7 +502,7 @@ int LogicPro::addTracks(int numTracksNeeded)
 
 void LogicPro::printSampleRate()
 {
-    std::cout << "THIS Sample rate: " << this-> sampleRate << std::endl;
+    std::cout << "THIS Sample rate: " << this->sampleRate << std::endl;
 }
 
 /*
@@ -547,7 +547,7 @@ int HouseBuilder::addShelvesToKitchen(House::Kitchen kitchenA, int numShelvesToA
 
 void HouseBuilder::printHouseNumRooms()
 {
-    std::cout << "THIS Number of rooms in 'house': " << this-> house.numRooms << std::endl; 
+    std::cout << "THIS Number of rooms in 'house': " << this->house.numRooms << std::endl; 
 }
 
 /*
@@ -592,7 +592,7 @@ void GameStore::displayGame(Xbox::Game gameA)
 
 void GameStore::printGameRating()
 {
-    std::cout << "THIS Game rating is: " << this-> game.gameRating << std::endl;
+    std::cout << "THIS Game rating is: " << this->game.gameRating << std::endl;
 }
 
 /*
