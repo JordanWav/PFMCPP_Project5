@@ -109,7 +109,7 @@ void someMemberFunction(const Axe& axe);
     };
     bool furnishHouse(const House& myHouse);
     void openFrontDoor(std::string door = "front door");
-    bool closeWindow(House::Kitchen& myKitchen);
+    bool closeWindow(const House::Kitchen& myKitchen);
     void openWindows(int openedWindows);
     void printNumBeds();
 
@@ -253,7 +253,7 @@ void House::openWindows(int openedWindows)
     }
 }
 
-bool House::closeWindow(House::Kitchen& myKitchen)
+bool House::closeWindow(const House::Kitchen& myKitchen)
 {
     return myKitchen.numShelves > 1;
 }
@@ -637,7 +637,7 @@ struct GameStore
     GameStore();
     ~GameStore();
 
-    void sellControllersWithXbox(Xbox&, int numControllersToSell);
+    void sellControllersWithXbox(const Xbox&, int numControllersToSell);
     void displayGame(const Xbox::Game& gameA);
     void printGameRating();
 
@@ -655,7 +655,7 @@ GameStore::~GameStore()
     std::cout << "Game store demolished" << std::endl;
 }
 
-void sellControllersWithXbox(Xbox&, int numControllersToSell)
+void sellControllersWithXbox(const Xbox&, int numControllersToSell)
 {
     std::cout << "Xbox comes with 1 free controller" << std::endl;
     std::cout << numControllersToSell << " additional controllers sold" << std::endl;
