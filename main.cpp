@@ -75,6 +75,7 @@ void someMemberFunction(const Axe& axe);
  copied UDT 1:
  */
  #include <iostream>
+ #include "LeakedObjectDetector.h"
 
  struct House 
  {   
@@ -103,12 +104,16 @@ void someMemberFunction(const Axe& axe);
         float preheatOven(float ovenTemperature);
         bool tableSet(int numPlacesToSet, int placesSet);
         void printNumKnives();
+
+        JUCE_LEAK_DETECTOR(Kitchen)
     };
-    bool furnishHouse(House myHouse);
+    bool furnishHouse(const House& myHouse);
     void openFrontDoor(std::string door = "front door");
-    bool closeWindow(House::Kitchen myKitchen);
+    bool closeWindow(const House::Kitchen& myKitchen);
     void openWindows(int openedWindows);
     void printNumBeds();
+
+    JUCE_LEAK_DETECTOR(House)
 };
 
 House::House() : numRooms(4), numWindows(10), ownerName("Viktor"), numDoors(5), numBeds(2)
@@ -195,7 +200,7 @@ void House::Kitchen::printNumKnives()
     std::cout << "THIS Number of knives: " << this->numKnives << std::endl;
 }
 
-bool House::furnishHouse(House myHouse)
+bool House::furnishHouse(const House& myHouse)
 {   
     if( myHouse.numBeds == 0 )
     {
@@ -204,6 +209,16 @@ bool House::furnishHouse(House myHouse)
     std::cout << "No need to buy more beds, I already have " << myHouse.numBeds << std::endl;
     return false;
 }
+
+struct KitchenWrapper
+{
+    KitchenWrapper( House::Kitchen* ptr ) : pointerToKitchen( ptr ) {}
+    ~KitchenWrapper()
+    {
+        delete pointerToKitchen;
+    }
+    House::Kitchen* pointerToKitchen = nullptr;
+};
 
 void House::openFrontDoor(std::string door)
 {
@@ -238,7 +253,7 @@ void House::openWindows(int openedWindows)
     }
 }
 
-bool House::closeWindow(House::Kitchen myKitchen)
+bool House::closeWindow(const House::Kitchen& myKitchen)
 {
     return myKitchen.numShelves > 1;
 }
@@ -247,6 +262,16 @@ void House::printNumBeds()
 {
     std::cout << "THIS Number of beds: " << this->numBeds << std::endl;
 }
+
+struct HouseWrapper
+{
+    HouseWrapper( House* ptr ) : pointerToHouse( ptr ) {}
+    ~HouseWrapper()
+    {
+        delete pointerToHouse;
+    }
+    House* pointerToHouse = nullptr;
+};
 
 
 /*
@@ -280,12 +305,16 @@ void House::printNumBeds()
         void changeMenu(char buttonPressed = 'b', std::string currentMenu = "Main menu");
         int totalAchievementPoints(int achievementsGained, int achievementPoints);
         void printSizeOfGame();
+
+        JUCE_LEAK_DETECTOR(Game)
     };
-    bool openGame(Xbox::Game skyrim);
-    bool downloadGame(Xbox::Game haloInfinite);
-    void turnOnXbox(Xbox myXbox);
+    bool openGame(const Xbox::Game& skyrim);
+    bool downloadGame(const Xbox::Game& haloInfinite);
+    void turnOnXbox(Xbox& myXbox);
     int deleteAllGames(int gamesDeleted);
     void printAmountOfSpace();
+
+    JUCE_LEAK_DETECTOR(Xbox)
 };
 
 Xbox::Xbox() : amountOfSpace(500.f), numGamesDownloaded(10), numControllers(2), profileName("Profile2"), numFriendsOnline(10)
@@ -365,7 +394,17 @@ void Xbox::Game::printSizeOfGame()
     std::cout << "THIS Size of game: " << this->sizeOfGame << std::endl;
 }
 
-bool Xbox::openGame(Xbox::Game skyrim)
+struct GameWrapper
+{
+    GameWrapper( Xbox::Game* ptr ) : pointerToGame( ptr ) {}
+    ~GameWrapper()
+    {
+        delete pointerToGame;
+    }
+    Xbox::Game* pointerToGame = nullptr;
+};
+
+bool Xbox::openGame(const Xbox::Game& skyrim)
 {
     if( skyrim.gameCategory == "RPG" )
     {
@@ -375,7 +414,7 @@ bool Xbox::openGame(Xbox::Game skyrim)
     return false;
 }
 
-bool Xbox::downloadGame(Xbox::Game haloInfinite)
+bool Xbox::downloadGame(const Xbox::Game& haloInfinite)
 {
     if( Xbox::amountOfSpace >= haloInfinite.sizeOfGame )
     {
@@ -385,7 +424,7 @@ bool Xbox::downloadGame(Xbox::Game haloInfinite)
     return false;
 }
 
-void Xbox::turnOnXbox(Xbox myXbox)
+void Xbox::turnOnXbox(Xbox& myXbox)
 {
     std::cout << "Xbox On!" << std::endl;
     myXbox.profileName = "My Profile";   
@@ -409,6 +448,16 @@ void Xbox::printAmountOfSpace()
     std::cout << "THIS Amount of space: " << this->amountOfSpace << std::endl;
 }
 
+struct XboxWrapper
+{
+    XboxWrapper( Xbox* ptr ) : pointerToXbox( ptr ) {}
+    ~XboxWrapper()
+    {
+        delete pointerToXbox;
+    }
+    Xbox* pointerToXbox = nullptr;
+};
+
 /*
  copied UDT 3:
  */
@@ -423,11 +472,13 @@ struct LogicPro
     LogicPro();
     ~LogicPro();
 
-    std::string createInstrumentTrack(LogicPro trackA);
-    std::string insertPlugin(LogicPro trackA);
-    int recordPerformance(LogicPro trackB);
+    std::string createInstrumentTrack(const LogicPro& trackA);
+    std::string insertPlugin(const LogicPro& trackA);
+    int recordPerformance(const LogicPro& trackB);
     int addTracks(int numTracksNeeded);
     void printSampleRate();
+
+    JUCE_LEAK_DETECTOR(LogicPro)
 };
 
 LogicPro::LogicPro() : sampleRate(44100.f), nameOfInputDevice("Scarlett 2i4"), nameOfProject("My Song"), numTracks(25), tempo(135)
@@ -448,7 +499,7 @@ LogicPro::~LogicPro()
     std::cout << "Logic Pro Closed" << std::endl;
 }
 
-std::string LogicPro::createInstrumentTrack(LogicPro trackA)
+std::string LogicPro::createInstrumentTrack(const LogicPro& trackA)
 {
     if ( trackA.numTracks < 1000 )
     {
@@ -459,7 +510,7 @@ std::string LogicPro::createInstrumentTrack(LogicPro trackA)
     return "!";
 }
 
-std::string LogicPro::insertPlugin(LogicPro trackA)
+std::string LogicPro::insertPlugin(const LogicPro& trackA)
 {
     if ( trackA.nameOfProject == "my project" )
     {
@@ -470,7 +521,7 @@ std::string LogicPro::insertPlugin(LogicPro trackA)
     return "no plugin";
 }
 
-int LogicPro::recordPerformance(LogicPro trackB)
+int LogicPro::recordPerformance(const LogicPro& trackB)
 {
     if ( trackB.nameOfInputDevice == "SSL 2+")
     {
@@ -507,6 +558,16 @@ void LogicPro::printSampleRate()
     std::cout << "THIS Sample rate: " << this->sampleRate << std::endl;
 }
 
+struct LogicProWrapper
+{
+    LogicProWrapper( LogicPro* ptr ) : pointerToLogicPro( ptr ) {}
+    ~LogicProWrapper()
+    {
+        delete pointerToLogicPro;
+    }
+    LogicPro* pointerToLogicPro = nullptr;
+};
+
 /*
  new UDT 4:
  with 2 member functions
@@ -519,9 +580,11 @@ struct HouseBuilder
     HouseBuilder();
     ~HouseBuilder();
 
-    void createAnotherFloor(House houseA);
-    int addShelvesToKitchen(House::Kitchen kitchenA, int numShelvesToAdd);
+    void createAnotherFloor(const House& houseA);
+    int addShelvesToKitchen(const House::Kitchen& kitchenA, int numShelvesToAdd);
     void printHouseNumRooms();
+    
+    JUCE_LEAK_DETECTOR(HouseBuilder)
 };
 
 HouseBuilder::HouseBuilder()
@@ -535,12 +598,12 @@ HouseBuilder::~HouseBuilder()
     std::cout << "House builder stopped" << std::endl;
 }
 
-void HouseBuilder::createAnotherFloor(House houseA)
+void HouseBuilder::createAnotherFloor(const House& houseA)
 {
     std::cout << "Adding floor to " << houseA.ownerName << "'s house" << std::endl;
 }
 
-int HouseBuilder::addShelvesToKitchen(House::Kitchen kitchenA, int numShelvesToAdd)
+int HouseBuilder::addShelvesToKitchen(const House::Kitchen& kitchenA, int numShelvesToAdd)
 {
     std::cout << "Adding " << numShelvesToAdd << " shelves to kitchen" << std::endl;
     std::cout << "Total number of shelves is now: " << kitchenA.numShelves + numShelvesToAdd << std::endl;
@@ -551,6 +614,16 @@ void HouseBuilder::printHouseNumRooms()
 {
     std::cout << "THIS Number of rooms in 'house': " << this->house.numRooms << std::endl; 
 }
+
+struct HouseBuilderWrapper
+{
+    HouseBuilderWrapper( HouseBuilder* ptr ) : pointerToHouseBuilder( ptr ) {}
+    ~HouseBuilderWrapper()
+    {
+        delete pointerToHouseBuilder;
+    }
+    HouseBuilder* pointerToHouseBuilder = nullptr;
+};
 
 /*
  new UDT 5:
@@ -564,9 +637,11 @@ struct GameStore
     GameStore();
     ~GameStore();
 
-    void sellControllersWithXbox(Xbox, int numControllersToSell);
-    void displayGame(Xbox::Game gameA);
+    void sellControllersWithXbox(const Xbox&, int numControllersToSell);
+    void displayGame(const Xbox::Game& gameA);
     void printGameRating();
+
+    JUCE_LEAK_DETECTOR(GameStore)
 };
 
 GameStore::GameStore()
@@ -580,13 +655,13 @@ GameStore::~GameStore()
     std::cout << "Game store demolished" << std::endl;
 }
 
-void sellControllersWithXbox(Xbox, int numControllersToSell)
+void sellControllersWithXbox(const Xbox&, int numControllersToSell)
 {
     std::cout << "Xbox comes with 1 free controller" << std::endl;
     std::cout << numControllersToSell << " additional controllers sold" << std::endl;
 }
 
-void GameStore::displayGame(Xbox::Game gameA)
+void GameStore::displayGame(const Xbox::Game& gameA)
 {
     std::cout << "Displaying game" << std::endl;
     std:: cout << "Game info: " << "Genre: " << gameA.gameCategory << ", Rating: " << gameA.gameRating << std::endl; 
@@ -596,6 +671,16 @@ void GameStore::printGameRating()
 {
     std::cout << "THIS Game rating is: " << this->game.gameRating << std::endl;
 }
+
+struct GameStoreWrapper
+{
+    GameStoreWrapper( GameStore* ptr ) : pointerToGameStore( ptr ) {}
+    ~GameStoreWrapper()
+    {
+        delete pointerToGameStore;
+    }
+    GameStore* pointerToGameStore = nullptr;
+};
 
 /*
  MAKE SURE YOU ARE NOT ON THE MASTER BRANCH
@@ -614,102 +699,98 @@ void GameStore::printGameRating()
 #include <iostream>
 int main()
 {   
-    House home;
-    House::Kitchen homeKitchen;
+    HouseWrapper home( new House() );
+    KitchenWrapper homeKitchen( new House::Kitchen() );
 
-    std::cout << "How many rooms are in my home? " << home.numRooms << std::endl;
-
-    home.furnishHouse(home);
-    home.openFrontDoor("front door");
-    home.closeWindow(homeKitchen);
-    home.openWindows(0);
-    std::cout << "Number of beds: " << home.numBeds << std::endl;
-    home.printNumBeds();
+    std::cout << "How many rooms are in my home? " << home.pointerToHouse->numRooms << std::endl;
+    home.pointerToHouse->furnishHouse(*home.pointerToHouse);
+    home.pointerToHouse->openFrontDoor("front door");
+    home.pointerToHouse->closeWindow(*homeKitchen.pointerToKitchen);
+    home.pointerToHouse->openWindows(0);
+    std::cout << "Number of beds: " << home.pointerToHouse->numBeds << std::endl;
+    home.pointerToHouse->printNumBeds();
 
     std::cout << "----------------------------------" << std::endl;
     
     std::cout << "Kitchen A:" << std::endl;
-    House::Kitchen kitchenA;
+    KitchenWrapper kitchenA( new House::Kitchen() );
     
-    std::cout << "How many knives are in Kitchen A? " << kitchenA.numKnives << std::endl;
+    std::cout << "How many knives are in Kitchen A? " << kitchenA.pointerToKitchen->numKnives << std::endl;
 
-    kitchenA.microwaveChicken(300.f);
-    kitchenA.madeSalad("Great Lettuce", false, "French");
-    kitchenA.preheatOven(450.f);
-    kitchenA.tableSet(7, 0);
-    std::cout << "Number of knives: " << kitchenA.numKnives << std::endl;
-    kitchenA.printNumKnives();
+    kitchenA.pointerToKitchen->microwaveChicken(300.f);
+    kitchenA.pointerToKitchen->madeSalad("Great Lettuce", false, "French");
+    kitchenA.pointerToKitchen->preheatOven(450.f);
+    kitchenA.pointerToKitchen->tableSet(7, 0);
+    std::cout << "Number of knives: " << kitchenA.pointerToKitchen->numKnives << std::endl;
+    kitchenA.pointerToKitchen->printNumKnives();
 
     std::cout << std::endl;
 
     std::cout << "Kitchen B:" << std::endl;
-    House::Kitchen kitchenB;
+    KitchenWrapper kitchenB( new House::Kitchen() );
 
-    kitchenB.numKnives -= 5;
-    std::cout << "How many knives are in Kitchen B? " << kitchenB.numKnives << std::endl;
-
-    kitchenB.microwaveChicken(10.f);
-    kitchenB.madeSalad("Lettuce!", true, "Italian");
-    kitchenB.preheatOven(400.f);
-
-    kitchenB.numPlates = 2;
-    kitchenB.tableSet(5, 0);
+    kitchenB.pointerToKitchen->numKnives -= 5;
+    std::cout << "How many knives are in Kitchen B? " << kitchenB.pointerToKitchen->numKnives << std::endl;
+    kitchenB.pointerToKitchen->microwaveChicken(10.f);
+    kitchenB.pointerToKitchen->madeSalad("Lettuce!", true, "Italian");
+    kitchenB.pointerToKitchen->preheatOven(400.f);
+    kitchenB.pointerToKitchen->numPlates = 2;
+    kitchenB.pointerToKitchen->tableSet(5, 0);
     
     std::cout << "----------------------------------" << std::endl;
 
-    Xbox myXbox;
-    Xbox::Game oblivion;
+    XboxWrapper myXbox( new Xbox() );
+    GameWrapper oblivion( new Xbox::Game() );
 
-    std::cout << "Does my Xbox have more than 550 gigabytes of space? " << (myXbox.amountOfSpace > 550.f ? "Yes" : "No") << std::endl;
-
-    myXbox.openGame(oblivion);
-    myXbox.downloadGame(oblivion);
-    myXbox.turnOnXbox(myXbox);
-    myXbox.deleteAllGames(0);
-    std::cout << "Amount of space: " << myXbox.amountOfSpace << std::endl;
-    myXbox.printAmountOfSpace();
-
-    std::cout << "----------------------------------" << std::endl;
-
-    Xbox::Game morrowind;
-    morrowind.isGame("morrowind");
-    morrowind.completeAchievement("none", 0);
-    morrowind.changeMenu('a', "Start menu");
-
-    Xbox::Game skyrim;
-    skyrim.numCompletedAchievements = 10;
-    skyrim.totalAchievementPoints(5, 10);
-    std::cout << "Size of game: " << skyrim.sizeOfGame << std::endl;
-    morrowind.printSizeOfGame();
+    std::cout << "Does my Xbox have more than 550 gigabytes of space? " << (myXbox.pointerToXbox->amountOfSpace > 550.f ? "Yes" : "No") << std::endl;
+    myXbox.pointerToXbox->openGame(*oblivion.pointerToGame);
+    myXbox.pointerToXbox->downloadGame(*oblivion.pointerToGame);
+    myXbox.pointerToXbox->turnOnXbox(*myXbox.pointerToXbox);
+    myXbox.pointerToXbox->deleteAllGames(0);
+    std::cout << "Amount of space: " << myXbox.pointerToXbox->amountOfSpace << std::endl;
+    myXbox.pointerToXbox->printAmountOfSpace();
 
     std::cout << "----------------------------------" << std::endl;
 
-    LogicPro sessionA;
+    GameWrapper morrowind( new Xbox::Game() );
+    morrowind.pointerToGame->isGame("morrowind");
+    morrowind.pointerToGame->completeAchievement("none", 0);
+    morrowind.pointerToGame->changeMenu('a', "Start menu");
 
-    std::cout << "Name of project: " << sessionA.nameOfProject << std::endl;
-
-    sessionA.createInstrumentTrack(sessionA);
-    sessionA.insertPlugin(sessionA);
-    sessionA.recordPerformance(sessionA);
-    sessionA.addTracks(15);
-    std::cout << "Sample rate: " << sessionA.sampleRate << std::endl;
-    sessionA.printSampleRate();
+    GameWrapper skyrim( new Xbox::Game() );
+    skyrim.pointerToGame->numCompletedAchievements = 10;
+    skyrim.pointerToGame->totalAchievementPoints(5, 10);
+    std::cout << "Size of game: " << skyrim.pointerToGame->sizeOfGame << std::endl;
+    morrowind.pointerToGame->printSizeOfGame();
 
     std::cout << "----------------------------------" << std::endl;
 
-    HouseBuilder builder;
-    builder.createAnotherFloor(builder.house);
-    builder.addShelvesToKitchen(builder.kitchen, 2);
-    std::cout << "Number of rooms in 'house': " << builder.house.numRooms << std::endl;
-    builder.printHouseNumRooms();
+    LogicProWrapper sessionA( new LogicPro() );
+
+    std::cout << "Name of project: " << sessionA.pointerToLogicPro->nameOfProject << std::endl;
+    sessionA.pointerToLogicPro->createInstrumentTrack(*sessionA.pointerToLogicPro);
+    sessionA.pointerToLogicPro->insertPlugin(*sessionA.pointerToLogicPro);
+    sessionA.pointerToLogicPro->recordPerformance(*sessionA.pointerToLogicPro);
+    sessionA.pointerToLogicPro->addTracks(15);
+    std::cout << "Sample rate: " << sessionA.pointerToLogicPro->sampleRate << std::endl;
+    sessionA.pointerToLogicPro->printSampleRate();
+
+    std::cout << "----------------------------------" << std::endl;
+
+    HouseBuilderWrapper builder( new HouseBuilder() );
+
+    builder.pointerToHouseBuilder->createAnotherFloor(builder.pointerToHouseBuilder->house);
+    builder.pointerToHouseBuilder->addShelvesToKitchen(builder.pointerToHouseBuilder->kitchen, 2);
+    std::cout << "Number of rooms in 'house': " << builder.pointerToHouseBuilder->house.numRooms << std::endl;
+    builder.pointerToHouseBuilder->printHouseNumRooms();
 
     std::cout << "----------------------------------" << std::endl;
     
-    GameStore gameStore;
-    sellControllersWithXbox(gameStore.xbox, 3);
-    gameStore.displayGame(gameStore.game);
-    std::cout << "Game rating is: " << gameStore.game.gameRating << std::endl;
-    gameStore.printGameRating();
+    GameStoreWrapper gameStore( new GameStore() );
+    sellControllersWithXbox(gameStore.pointerToGameStore->xbox, 3);
+    gameStore.pointerToGameStore->displayGame(gameStore.pointerToGameStore->game);
+    std::cout << "Game rating is: " << gameStore.pointerToGameStore->game.gameRating << std::endl;
+    gameStore.pointerToGameStore->printGameRating();
 
     std::cout << "----------------------------------" << std::endl;
 
